@@ -59,6 +59,11 @@ class Movie {
     return DateTime.parse(val);
   }
 
+  // size available for w92, w185, w500
+  String getPosterImageUrl({size : "w92" }){
+    return "https://image.tmdb.org/t/p/$size${this.posterPath}";
+  }
+
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
   Map<String, dynamic> toJson() => _$MovieToJson(this);
 }

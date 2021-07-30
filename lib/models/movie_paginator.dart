@@ -21,6 +21,7 @@ class MoviePaginator {
 
   MoviePaginator({required this.page, required this.results,
     required this.totalPages, required this.totalResults});
+
   static List<Movie> _parseMovieList(List<dynamic> movies){
     return movies.map((movie) => Movie.fromJson(movie)).toList();
   }

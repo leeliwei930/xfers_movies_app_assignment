@@ -23,26 +23,36 @@ class MovieController extends GetxController {
 
   late MoviedbProvider provider;
   @override
-  void onInit() {
+  MovieController onInit()  {
     // TODO: implement onInit
     super.onInit();
     this.provider = MoviedbProvider(
       apiKey: dotenv.env['MOVIE_DB_API_KEY']
-    );
+    )..onInit();
+     this.loadTrendingMovies(forceRefresh: true);
+    return this;
   }
 
   Future<MoviePaginator> loadTrendingMovies({page: 1, forceRefresh: false}) async {
       this.viewMode.value = ViewMode.Trending;
+      if(forceRefresh){
+        this.isLoading.trigger(true);
+      }
       try {
         Response response = await provider.trending(page: page);
+
         MoviePaginator paginator = MoviePaginator.fromJson(response.body);
-        this.trendingMoviesPaginator.value = paginator;
+        this.trendingMoviesPaginator = paginator.obs;
         if(forceRefresh){
           trendingMovies.clear();
         }
         trendingMovies.addAll(paginator.results);
+        this.isLoading.trigger(false);
+
         return Future.value(paginator);
       } catch (error){
+        this.isLoading.trigger(true);
+
         return Future.error(error);
       }
   }
@@ -52,7 +62,7 @@ class MovieController extends GetxController {
     try {
       Response response = await provider.search(query: keyword, page: page);
       MoviePaginator paginator = MoviePaginator.fromJson(response.body);
-      this.searchMoviesPaginator.value = paginator;
+      this.searchMoviesPaginator = paginator.obs;
       this.searchKeyword.value = keyword;
       if(forceRefresh){
         movieResults.clear();

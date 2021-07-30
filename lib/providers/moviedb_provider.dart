@@ -32,14 +32,14 @@ class MoviedbProvider extends GetConnect {
     return get("/search", query: {
       "api_key" : apiKey,
       "query" : query,
-      "page" : page
+      "page" : page.toString()
     });
   }
 
   Future<Response> trending({type: "movie", scope: "week", page: 1}){
     return get("/trending/$type/$scope", query: {
       "api_key" : apiKey,
-      "page" : page
+      "page" : page.toString()
     });
   }
 
