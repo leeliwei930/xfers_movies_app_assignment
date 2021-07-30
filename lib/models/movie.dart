@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'movie.g.dart';
@@ -63,6 +64,11 @@ class Movie {
   String getPosterImageUrl({size : "w92" }){
     return "https://image.tmdb.org/t/p/$size${this.posterPath}";
   }
+
+  String formatReleaseDate(){
+    return DateFormat("d MMMM y").format(this.releaseDate).toString();
+  }
+
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
   Map<String, dynamic> toJson() => _$MovieToJson(this);

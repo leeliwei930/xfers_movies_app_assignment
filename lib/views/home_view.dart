@@ -14,12 +14,19 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
 
   late MovieController controller;
+  late ScrollController _scrollController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     this.controller = Get.put(MovieController()..onInit());
+    this._scrollController = ScrollController();
 
+    this._scrollController.addListener(() {
+      if(this._scrollController.offset >= this._scrollController.position.maxScrollExtent &&
+          !_scrollController.position.outOfRange){
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -31,6 +38,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Container(
         child: Obx(() => ListView.separated(
+            controller: _scrollController,
             padding: kDefaultPadding,
             itemBuilder: buildMoviesList,
             separatorBuilder: (BuildContext context, int index){
