@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:xfers_movie_assignment/views/home_view.dart';
 
 class XfersMovieApp extends StatefulWidget {
 
