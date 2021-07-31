@@ -40,8 +40,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
 
       if(controller.viewMode() == ViewMode.Trending){
         if(currentPaginator != null){
-          this._paginationBarAnimationController.forward();
           await controller.loadTrendingMovies(page: currentPaginator.page + 1);
+          this._paginationBarAnimationController.forward();
           await Future.delayed(Duration(milliseconds: 1250));
           this._paginationBarAnimationController.reverse();
         }
@@ -124,7 +124,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   if(controller.currentPaginator() != null){
                     MoviePaginator paginator = controller.currentPaginator()!;
                     return PaginationBar(
-                        loadingPage: paginator.page + 1,
+                        loadingPage: paginator.page,
                         totalPages: paginator.totalPages
                     );
                   } else {

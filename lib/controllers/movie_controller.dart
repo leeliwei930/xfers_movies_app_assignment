@@ -62,11 +62,12 @@ class MovieController extends GetxController {
         this.pageLoading.trigger(false);
 
         MoviePaginator paginator = MoviePaginator.fromJson(response.body);
-        this.trendingMoviesPaginator = paginator.obs;
         if(clearPreviousResult){
           trendingMovies.clear();
         }
         trendingMovies.addAll(paginator.results);
+        this.trendingMoviesPaginator = paginator.obs;
+
         this.isLoading.trigger(false);
 
         return Future.value(paginator);
@@ -90,12 +91,13 @@ class MovieController extends GetxController {
     try {
       Response response = await provider.search(query: keyword, page: page);
       MoviePaginator paginator = MoviePaginator.fromJson(response.body);
-      this.searchMoviesPaginator = paginator.obs;
       this.searchKeyword.value = keyword;
       if(clearPreviousResult){
         movieResults.clear();
       }
       movieResults.addAll(paginator.results);
+      this.searchMoviesPaginator = paginator.obs;
+
       this.isLoading.trigger(false);
       this.pageLoading.trigger(false);
 
