@@ -43,8 +43,13 @@ class MovieController extends GetxController {
   void setViewMode(ViewMode viewMode){
     this.viewMode.value = viewMode;
   }
-  Future<MoviePaginator> loadTrendingMovies({page: 1, forceRefresh: false, clearPreviousResult: false}) async {
 
+  void resetSearchResults(){
+    this.searchKeyword.value = "";
+    this.movieResults.clear();
+  }
+  Future<MoviePaginator> loadTrendingMovies({page: 1, forceRefresh: false, clearPreviousResult: false}) async {
+      this.searchKeyword.value = "";
       if(forceRefresh){
         this.isLoading.trigger(true);
       }

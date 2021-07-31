@@ -7,12 +7,9 @@ import 'package:xfers_movie_assignment/controllers/movie_controller.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 class MovieSearchDelegate<T> extends SearchDelegate {
 
-  late String initialQuery;
    MovieController _controller = Get.find<MovieController>();
 
-  MovieSearchDelegate({this.initialQuery = ""}){
-    this.query = initialQuery;
-  }
+
 
 
   // @override
@@ -72,13 +69,12 @@ class MovieSearchDelegate<T> extends SearchDelegate {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: () => closeSearch(context)
+      onPressed: () => closeSearch(context, "")
     );
   }
 
   @override
   Widget buildResults(BuildContext context)  {
-    print("build");
 
     return Obx((){
       List<Movie> results = _controller.movieResults();
@@ -115,8 +111,8 @@ class MovieSearchDelegate<T> extends SearchDelegate {
     // TODO: implement query
     super.query = value;
   }
-  void closeSearch(BuildContext context){
-    close(context, this.query);
+  void closeSearch(BuildContext context, String query){
+    close(context, query);
   }
 
 }

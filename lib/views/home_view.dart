@@ -160,16 +160,20 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
   void clearSearchResults() async {
       await this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
       controller.setViewMode(ViewMode.Trending);
+      controller.resetSearchResults();
   }
 
   void handleSearch() async {
     String query = await showSearch(
         context: context,
-        delegate: MovieSearchDelegate<String>()
+        delegate: MovieSearchDelegate<String>(),
+        query:  controller.searchKeyword()
     );
     if(query.length > 0){
       await controller.searchMovie(keyword: query, clearPreviousResult: true);
       controller.setViewMode(ViewMode.Search);
+    } else {
+      controller.setViewMode(ViewMode.Trending);
     }
   }
 }
