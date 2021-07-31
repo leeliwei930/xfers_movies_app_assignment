@@ -33,9 +33,15 @@ class MovieController extends GetxController {
      this.loadTrendingMovies(forceRefresh: true);
     return this;
   }
-
-  Future<MoviePaginator> loadTrendingMovies({page: 1, forceRefresh: false}) async {
+  Rx<MoviePaginator?> get currentPaginator {
+    if(viewMode.value == ViewMode.Trending){
+      return trendingMoviesPaginator;
+    }
+    return searchMoviesPaginator;
+  }
+  Future<MoviePaginator> loadTrendingMovies({page: 1, forceRefresh: false, clearPreviousResult: false}) async {
       this.viewMode.value = ViewMode.Trending;
+
       if(forceRefresh){
         this.isLoading.trigger(true);
       }
@@ -45,15 +51,15 @@ class MovieController extends GetxController {
       }
       try {
         Response response = await provider.trending(page: page);
+        this.pageLoading.trigger(false);
 
         MoviePaginator paginator = MoviePaginator.fromJson(response.body);
         this.trendingMoviesPaginator = paginator.obs;
-        if(forceRefresh){
+        if(clearPreviousResult){
           trendingMovies.clear();
         }
         trendingMovies.addAll(paginator.results);
         this.isLoading.trigger(false);
-        this.pageLoading.trigger(false);
 
         return Future.value(paginator);
       } catch (error){

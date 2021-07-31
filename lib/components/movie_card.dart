@@ -25,7 +25,6 @@ class MovieCard extends StatelessWidget {
               loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
                 if(event == null) return widget;
                 return Container(
-                  width: 185,
                   height: MediaQuery.of(context).size.height * 0.25,
                   color: Colors.grey,
                 );
