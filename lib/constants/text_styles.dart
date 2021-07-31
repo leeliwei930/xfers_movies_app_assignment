@@ -17,3 +17,7 @@ const kRatingTextStyle = TextStyle(
   fontSize: 21,
   color: Colors.black54
 );
+
+const kTextButtonTextStyle = TextStyle(
+  fontWeight: FontWeight.w700,
+);

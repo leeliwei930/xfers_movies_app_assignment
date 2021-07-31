@@ -77,12 +77,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
           centerTitle: false,
           title: Text("Movie App"),
           actions: [
-            IconButton(onPressed: () async {
-              String query = await showSearch(
-                  context: context,
-                  delegate: MovieSearchDelegate<String>()
-              );
-            }, icon: Icon(Icons.search))
+            IconButton(onPressed: handleSearch, icon: Icon(Icons.search))
           ],
         ),
         body: Container(
@@ -120,12 +115,12 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
             )
         ),
         extendBody: true,
-        bottomNavigationBar: Builder(
-          builder: (BuildContext context){
-            if(controller.viewMode() == ViewMode.Trending){
-              return FadeTransition(
-                opacity: _paginationBarAnimationController,
-                child: Obx((){
+        bottomNavigationBar: Obx((){
+          if(controller.viewMode() == ViewMode.Trending){
+            return FadeTransition(
+              opacity: _paginationBarAnimationController,
+              child: Builder(
+                builder: (BuildContext context){
                   if(controller.currentPaginator() != null){
                     MoviePaginator paginator = controller.currentPaginator()!;
                     return PaginationBar(
@@ -135,17 +130,20 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   } else {
                     return Container();
                   }
-                }),
-              );
-            }
-            return Obx(() => SearchResultBar(
+                },
+              )
+            );
+          } else if (controller.viewMode() == ViewMode.Search){
+            return SearchResultBar(
               isLoading: controller.pageLoading(),
               keyword: controller.searchKeyword(),
               totalResults: controller.searchMoviesPaginator()!.totalResults.toInt(),
               loadedResults: controller.movieResults().length,
-            ));
-          },
-        )
+              onClear: clearSearchResults,
+            );
+          }
+          return Container();
+        })
     );
   }
 
@@ -159,4 +157,19 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     return MovieCard(movie: movie,);
   }
 
+  void clearSearchResults() async {
+      await this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
+      controller.setViewMode(ViewMode.Trending);
+  }
+
+  void handleSearch() async {
+    String query = await showSearch(
+        context: context,
+        delegate: MovieSearchDelegate<String>()
+    );
+    if(query.length > 0){
+      await controller.searchMovie(keyword: query, clearPreviousResult: true);
+      controller.setViewMode(ViewMode.Search);
+    }
+  }
 }

@@ -15,13 +15,13 @@ class MovieSearchDelegate<T> extends SearchDelegate {
   }
 
 
-  @override
-  void showResults(BuildContext context) async {
-    if(query.length > 0){
-      await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
-    }
-    super.showResults(context);
-  }
+  // @override
+  // void showResults(BuildContext context) async {
+  //   if(query.length > 0){
+  //     await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
+  //   }
+  //   super.showResults(context);
+  // }
 
   @override
   // TODO: implement searchFieldLabel
