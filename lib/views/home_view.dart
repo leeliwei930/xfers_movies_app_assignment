@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xfers_movie_assignment/components/movie_card.dart';
 import 'package:xfers_movie_assignment/components/pagination_bar.dart';
+import 'package:xfers_movie_assignment/components/search_result_bar.dart';
 import 'package:xfers_movie_assignment/constants/layout.dart';
 import 'package:xfers_movie_assignment/controllers/movie_controller.dart';
+import 'package:xfers_movie_assignment/delegate/movie_search_delegate.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 import 'package:xfers_movie_assignment/models/movie_paginator.dart';
 
@@ -34,13 +36,20 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     // if the scrolling position reached the bottom
     if(this._scrollController.offset >= this._scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange){
+      MoviePaginator? currentPaginator = controller.currentPaginator();
+
       if(controller.viewMode() == ViewMode.Trending){
-        MoviePaginator? currentTrendingPaginator = controller.trendingMoviesPaginator();
-        if(currentTrendingPaginator != null){
+        if(currentPaginator != null){
           this._paginationBarAnimationController.forward();
-          await controller.loadTrendingMovies(page: currentTrendingPaginator.page + 1);
+          await controller.loadTrendingMovies(page: currentPaginator.page + 1);
           await Future.delayed(Duration(milliseconds: 1250));
           this._paginationBarAnimationController.reverse();
+        }
+      } else {
+        if(currentPaginator != null){
+          await controller.searchMovie(
+              keyword: controller.searchKeyword(), page: currentPaginator.page + 1
+          );
         }
       }
     }
@@ -49,6 +58,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
   Future<void> forceRefreshMovies() async {
     if(controller.viewMode() == ViewMode.Trending){
         await controller.loadTrendingMovies(page: 1 , clearPreviousResult: true);
+    } else {
+      await controller.searchMovie(
+          keyword: controller.searchKeyword(), page: 1 , clearPreviousResult: true
+      );
     }
   }
   @override
@@ -63,6 +76,14 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
         appBar: AppBar(
           centerTitle: false,
           title: Text("Movie App"),
+          actions: [
+            IconButton(onPressed: () async {
+              String query = await showSearch(
+                  context: context,
+                  delegate: MovieSearchDelegate<String>()
+              );
+            }, icon: Icon(Icons.search))
+          ],
         ),
         body: Container(
             child: RefreshIndicator(
@@ -99,19 +120,31 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
             )
         ),
         extendBody: true,
-        bottomNavigationBar: FadeTransition(
-          opacity: _paginationBarAnimationController,
-          child: Obx((){
-            if(controller.currentPaginator() != null){
-              MoviePaginator paginator = controller.currentPaginator()!;
-              return PaginationBar(
-                  loadingPage: paginator.page + 1,
-                  totalPages: paginator.totalPages
+        bottomNavigationBar: Builder(
+          builder: (BuildContext context){
+            if(controller.viewMode() == ViewMode.Trending){
+              return FadeTransition(
+                opacity: _paginationBarAnimationController,
+                child: Obx((){
+                  if(controller.currentPaginator() != null){
+                    MoviePaginator paginator = controller.currentPaginator()!;
+                    return PaginationBar(
+                        loadingPage: paginator.page + 1,
+                        totalPages: paginator.totalPages
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
               );
-            } else {
-              return Container();
             }
-          }),
+            return Obx(() => SearchResultBar(
+              isLoading: controller.pageLoading(),
+              keyword: controller.searchKeyword(),
+              totalResults: controller.searchMoviesPaginator()!.totalResults.toInt(),
+              loadedResults: controller.movieResults().length,
+            ));
+          },
         )
     );
   }

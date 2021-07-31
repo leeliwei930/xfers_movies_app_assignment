@@ -20,16 +20,32 @@ class MovieCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.network(
-              movie!.getPosterImageUrl(size: "w185"),
-              loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
-                if(event == null) return widget;
+            Builder(
+              builder: (BuildContext context) {
+                if(movie!.getPosterImageUrl(size: "w185") != null){
+                  return Image.network(
+                    movie!.getPosterImageUrl(size: "w185")!,
+                    loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
+                      if(event == null) return widget;
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        color: Colors.grey,
+                      );
+                    },
+                  );
+                }
                 return Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  color: Colors.grey,
+                  width: 125,
+                  decoration: BoxDecoration(
+                      color: Colors.grey
+                  ),
+                  child: Center(
+                    child: Icon(Icons.local_movies, size: 36, color: Colors.white,),
+                  ),
                 );
               },
             ),
+
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(15),

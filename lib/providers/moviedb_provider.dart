@@ -10,7 +10,7 @@ class MoviedbProvider extends GetConnect {
   String apiVersion = "3";
   String? apiKey;
 
-  MoviedbProvider({this.endpoint = "https://api.themoviedb.org/", this.apiVersion = "3", required this.apiKey}){
+  MoviedbProvider({this.endpoint = "https://api.themoviedb.org", this.apiVersion = "3", required this.apiKey}){
     if(this.apiKey == null){
       throw Exception("The MovieDB API key is required, please specify it in the .env file with MOVIE_DB_API_KEY as environment variable");
     }
@@ -29,7 +29,7 @@ class MoviedbProvider extends GetConnect {
   }
 
   Future<Response> search({query: "superman", page: 1}){
-    return get("/search", query: {
+    return get("/search/movie", query: {
       "api_key" : apiKey,
       "query" : query,
       "page" : page.toString()

@@ -71,19 +71,32 @@ class MovieController extends GetxController {
       }
   }
 
-  Future<MoviePaginator> searchMovie({keyword: String, page: 1 , forceRefresh: false}) async {
+  Future<MoviePaginator> searchMovie({keyword: String, page: 1 , forceRefresh: false, clearPreviousResult: false}) async {
     this.viewMode.value = ViewMode.Search;
+    if(forceRefresh){
+      this.isLoading.trigger(true);
+    }
+    // if load the second page onward, trigger section based loading indicator
+    if(page > 1){
+      this.pageLoading.trigger(true);
+    }
     try {
       Response response = await provider.search(query: keyword, page: page);
       MoviePaginator paginator = MoviePaginator.fromJson(response.body);
       this.searchMoviesPaginator = paginator.obs;
       this.searchKeyword.value = keyword;
-      if(forceRefresh){
+      if(clearPreviousResult){
         movieResults.clear();
       }
       movieResults.addAll(paginator.results);
+      this.isLoading.trigger(false);
+      this.pageLoading.trigger(false);
+
       return Future.value(paginator);
     } catch(error) {
+      this.isLoading.trigger(false);
+      this.pageLoading.trigger(false);
+
       return Future.error(error);
     }
   }

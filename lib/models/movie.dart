@@ -13,7 +13,7 @@ class Movie {
   late String? backdropPath;
 
   @JsonKey(name: "poster_path")
-  late String posterPath;
+  late String? posterPath;
 
   @JsonKey(name: "genre_ids")
   late List<int> genresId;
@@ -57,15 +57,19 @@ class Movie {
   });
 
   static DateTime? _parseDateTime(String? val){
-    if(val != null){
-      return DateTime.parse(val);
+    if(val != null ){
+      return DateTime.tryParse(val);
     }
     return null;
   }
 
   // size available for w92, w185, w500
-  String getPosterImageUrl({size : "w92" }){
-    return "https://image.tmdb.org/t/p/$size${this.posterPath}";
+  String? getPosterImageUrl({size : "w92" }){
+    if(this.posterPath != null){
+
+      return "https://image.tmdb.org/t/p/$size${this.posterPath}";
+    }
+    return null;
   }
 
   String formatReleaseDate(){
