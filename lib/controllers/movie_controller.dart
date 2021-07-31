@@ -19,6 +19,7 @@ class MovieController extends GetxController {
   Rx<MoviePaginator?> searchMoviesPaginator = null.obs;
 
   RxBool isLoading = false.obs;
+  RxBool pageLoading = false.obs;
   RxString searchKeyword = "".obs;
 
   late MoviedbProvider provider;
@@ -38,6 +39,10 @@ class MovieController extends GetxController {
       if(forceRefresh){
         this.isLoading.trigger(true);
       }
+      // if load the second page onward, trigger section based loading indicator
+      if(page > 1){
+        this.pageLoading.trigger(true);
+      }
       try {
         Response response = await provider.trending(page: page);
 
@@ -48,10 +53,13 @@ class MovieController extends GetxController {
         }
         trendingMovies.addAll(paginator.results);
         this.isLoading.trigger(false);
+        this.pageLoading.trigger(false);
 
         return Future.value(paginator);
       } catch (error){
-        this.isLoading.trigger(true);
+        this.isLoading.trigger(false);
+        this.pageLoading.trigger(false);
+
 
         return Future.error(error);
       }

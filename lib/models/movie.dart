@@ -10,7 +10,7 @@ class Movie {
   late bool adult;
 
   @JsonKey(name: "backdrop_path")
-  late String backdropPath;
+  late String? backdropPath;
 
   @JsonKey(name: "poster_path")
   late String posterPath;
@@ -34,7 +34,7 @@ class Movie {
   late double popularity;
 
   @JsonKey(name: "release_date",fromJson: _parseDateTime)
-  late DateTime releaseDate;
+  late DateTime? releaseDate;
 
   @JsonKey(name: "title")
   late String title;
@@ -49,15 +49,18 @@ class Movie {
   late int voteCount;
 
   Movie({
-    required this.adult, required this.backdropPath, required this.genresId,
+    required this.adult, required this.genresId,
     required this.id, required this.originalLanguage, required this.originalTitle,
     required this.overview, required this.popularity, required this.posterPath,
     required this.releaseDate, required this.title, required this.video,
     required this.voteAverage, required this.voteCount
   });
 
-  static DateTime _parseDateTime(String val){
-    return DateTime.parse(val);
+  static DateTime? _parseDateTime(String? val){
+    if(val != null){
+      return DateTime.parse(val);
+    }
+    return null;
   }
 
   // size available for w92, w185, w500
@@ -66,7 +69,10 @@ class Movie {
   }
 
   String formatReleaseDate(){
-    return DateFormat("d MMMM y").format(this.releaseDate).toString();
+    if(this.releaseDate == null){
+      return "Unknown";
+    }
+    return DateFormat("d MMMM y").format(this.releaseDate!).toString();
   }
 
 
