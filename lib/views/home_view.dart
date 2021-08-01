@@ -78,7 +78,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
           centerTitle: false,
           title: Text("Movie App"),
           actions: [
-            IconButton(onPressed: handleSearch, icon: Icon(Icons.search))
+            IconButton(onPressed: () => handleSearch(), icon: Icon(Icons.search))
           ],
         ),
         body: Container(
@@ -91,8 +91,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                     child: CircularProgressIndicator(),
                   );
                 }
-                if(controller.searchError() != null){
-
+                if(controller.searchError() != null && controller.searchKeyword().length > 0){
                   Error error = controller.searchError()!;
                   return Center(
                     child: CardMessage(

@@ -31,6 +31,7 @@ class MovieController extends GetxController {
   // page loading state
   RxBool isLoading = false.obs;
   RxBool pageLoading = false.obs;
+  RxBool searchSuggestionLoading = false.obs;
 
   late MoviedbProvider provider;
 
@@ -86,6 +87,7 @@ class MovieController extends GetxController {
             this.trendingMoviesPaginator = paginator.obs;
 
           } else {
+            print(response.statusText!);
             this.trendingMoviesError = Error.mapErrorMessageToLabel(response.statusText!).obs;
           }
 
@@ -109,6 +111,7 @@ class MovieController extends GetxController {
     if(forceRefresh){
       this.isLoading.trigger(true);
     }
+    this.searchSuggestionLoading.trigger(true);
     // if load the second page onward, trigger section based loading indicator
     if(page > 1){
       this.pageLoading.trigger(true);
@@ -126,6 +129,7 @@ class MovieController extends GetxController {
           this.searchMoviesPaginator = paginator.obs;
         } else {
           this.searchError = Error.mapErrorMessageToLabel(response.statusText!).obs;
+
         }
       } catch(error) {
         if(error is TimeoutException){
@@ -134,6 +138,8 @@ class MovieController extends GetxController {
       } finally {
         this.isLoading.trigger(false);
         this.pageLoading.trigger(false);
+        this.searchSuggestionLoading.trigger(false);
+
       }
 
 

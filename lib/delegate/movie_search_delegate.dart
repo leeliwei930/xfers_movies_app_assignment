@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:xfers_movie_assignment/components/card_message.dart';
 import 'package:xfers_movie_assignment/components/tag_chip.dart';
 import 'package:xfers_movie_assignment/constants/text_styles.dart';
 import 'package:xfers_movie_assignment/controllers/movie_controller.dart';
+import 'package:xfers_movie_assignment/models/error.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 class MovieSearchDelegate<T> extends SearchDelegate {
 
@@ -26,21 +28,37 @@ class MovieSearchDelegate<T> extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Obx((){
-      late List<Movie> suggestedMovies = <Movie>[];
-      if(this.query.length <= 0){
+    late List<Movie> suggestedMovies = <Movie>[];
+
+    if(this.query.length <= 0){
+      if(_controller.trendingMovies.length >= 5){
         suggestedMovies = _controller.trendingMovies.sublist(0, 5);
-      } else {
-        _controller.searchMovie(keyword: query, clearPreviousResult: true);
-        suggestedMovies = _controller.movieResults();
       }
+    } else {
+      _controller.searchMovie(keyword: query, clearPreviousResult: true);
+    }
+    return Obx((){
+      suggestedMovies = _controller.movieResults();
+      if(_controller.searchSuggestionLoading()){
+        return LinearProgressIndicator();
+      }
+      if(_controller.searchError() != null){
+        Error error = _controller.searchError()!;
+        return Center(
+          child: CardMessage(
+            icon: Icon(error.icon, size: 48, color: Colors.amber,),
+            message: error.message,
+          ),
+        );
+      }
+
+
       return ListView.builder(
         itemBuilder: (BuildContext context, int index){
           Movie movie = suggestedMovies.elementAt(index);
           return ListTile(
             onTap: () async {
               this.query = movie.originalTitle;
-              await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
               close(context, this.query);
             },
             leading: Icon(Icons.north_west),
@@ -78,6 +96,18 @@ class MovieSearchDelegate<T> extends SearchDelegate {
 
     return Obx((){
       List<Movie> results = _controller.movieResults();
+      if(_controller.searchSuggestionLoading()){
+        return LinearProgressIndicator();
+      }
+      if(_controller.searchError() != null){
+        Error error = _controller.searchError()!;
+        return Center(
+          child: CardMessage(
+            icon: Icon(error.icon, size: 48, color: Colors.amber,),
+            message: error.message,
+          ),
+        );
+      }
       return ListView.builder(
         itemBuilder: (BuildContext context, int index){
           Movie movie = results.elementAt(index);

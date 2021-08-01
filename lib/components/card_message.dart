@@ -20,11 +20,12 @@ class CardMessage extends StatelessWidget {
               icon,
               Text(message, textAlign: TextAlign.center,),
               SizedBox(height: 15,),
-              TextButton.icon(
-                  onPressed: () => this.onRetry != null ? this.onRetry!() : null,
-                  icon: Icon(Icons.refresh),
-                  label: Text("RETRY")
-              )
+              if(this.onRetry != null)
+                TextButton.icon(
+                    onPressed: () => this.onRetry!() ,
+                    icon: Icon(Icons.refresh),
+                    label: Text("RETRY")
+                )
           ],
         ),
       ),
