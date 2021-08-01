@@ -32,6 +32,13 @@ class MovieCard extends StatelessWidget {
                         color: Colors.grey,
                       );
                     },
+                    errorBuilder: (BuildContext context, error, stackTrace){
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: 125,
+                        color: Colors.grey,
+                      );
+                    },
                   );
                 }
                 return Container(

@@ -1,12 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:xfers_movie_assignment/components/card_message.dart';
 import 'package:xfers_movie_assignment/components/movie_card.dart';
 import 'package:xfers_movie_assignment/components/pagination_bar.dart';
 import 'package:xfers_movie_assignment/components/search_result_bar.dart';
 import 'package:xfers_movie_assignment/constants/layout.dart';
 import 'package:xfers_movie_assignment/controllers/movie_controller.dart';
 import 'package:xfers_movie_assignment/delegate/movie_search_delegate.dart';
+import 'package:xfers_movie_assignment/models/error.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 import 'package:xfers_movie_assignment/models/movie_paginator.dart';
 
@@ -31,7 +33,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     this._paginationBarAnimationController = AnimationController(vsync: this,duration: Duration(milliseconds: 850));
   }
 
-  // listen to the list scrolling event to determine whether to load the next pages
+  // listen to the list scrolling event to determine when to load the next pages
   void listenListScrollEvent() async {
     // if the scrolling position reached the bottom
     if(this._scrollController.offset >= this._scrollController.position.maxScrollExtent &&
@@ -68,7 +70,6 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     _paginationBarAnimationController.addListener(() {
       setState(() {
-
       });
     });
     // TODO: implement build
@@ -84,12 +85,38 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
             child: RefreshIndicator(
               onRefresh:  forceRefreshMovies,
               child: Obx((){
+                late int itemCount;
                 if(controller.isLoading()){
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
-                late int itemCount;
+                if(controller.searchError() != null){
+
+                  Error error = controller.searchError()!;
+                  return Center(
+                    child: CardMessage(
+                      icon: Icon(error.icon, size: 48, color: Colors.amber,),
+                      message: error.message,
+                      onRetry: () async {
+                        await this.controller.searchMovie(keyword: controller.searchKeyword(), forceRefresh: true, clearPreviousResult: true);
+                      },
+                    ),
+                  );
+                }
+                if(controller.trendingMoviesError() != null){
+                  Error error = controller.trendingMoviesError()!;
+                  return Center(
+                    child: CardMessage(
+                      icon: Icon(error.icon, size: 48, color: Colors.amber,),
+                      message: error.message,
+                      onRetry: ()  {
+                         this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
+                      },
+                    ),
+                  );
+                }
+
                 if(controller.viewMode() == ViewMode.Trending){
                   itemCount = controller.trendingMovies.length;
                 } else {
@@ -115,40 +142,43 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
             )
         ),
         extendBody: true,
-        bottomNavigationBar: Obx((){
-          if(controller.viewMode() == ViewMode.Trending){
-            return FadeTransition(
-              opacity: _paginationBarAnimationController,
-              child: Builder(
-                builder: (BuildContext context){
-                  if(controller.currentPaginator() != null){
-                    MoviePaginator paginator = controller.currentPaginator()!;
-                    return PaginationBar(
-                        loadingPage: paginator.page,
-                        totalPages: paginator.totalPages
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              )
-            );
-          } else if (controller.viewMode() == ViewMode.Search){
-            return SearchResultBar(
-              isLoading: controller.pageLoading(),
-              keyword: controller.searchKeyword(),
-              totalResults: controller.searchMoviesPaginator()!.totalResults.toInt(),
-              loadedResults: controller.movieResults().length,
-              onClear: clearSearchResults,
-            );
-          }
-          return Container();
-        })
+        bottomNavigationBar: Obx(() => buildBottomBar())
     );
+  }
+
+  Widget buildBottomBar(){
+    if(controller.viewMode() == ViewMode.Trending){
+      return FadeTransition(
+          opacity: _paginationBarAnimationController,
+          child: Builder(
+            builder: (BuildContext context){
+              if(controller.currentPaginator() != null){
+                MoviePaginator paginator = controller.currentPaginator()!;
+                return PaginationBar(
+                    loadingPage: paginator.page,
+                    totalPages: paginator.totalPages
+                );
+              } else {
+                return Container();
+              }
+            },
+          )
+      );
+    } else if (controller.viewMode() == ViewMode.Search){
+      return SearchResultBar(
+        isLoading: controller.pageLoading(),
+        keyword: controller.searchKeyword(),
+        totalResults: controller.searchMoviesPaginator()!.totalResults.toInt(),
+        loadedResults: controller.movieResults().length,
+        onClear: clearSearchResults,
+      );
+    }
+    return Container();
   }
 
   Widget buildMoviesList(BuildContext context, int index){
     late Movie movie;
+    // render the movie card based on the view mode
     if(controller.viewMode() == ViewMode.Trending){
       movie = controller.trendingMovies.elementAt(index);
     } else {

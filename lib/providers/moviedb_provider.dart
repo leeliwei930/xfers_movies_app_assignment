@@ -17,15 +17,13 @@ class MoviedbProvider extends GetConnect {
   }
   @override
   void onInit() {
-    // set the movied db based url
+    // set the movied db basede url
     httpClient.baseUrl = "$endpoint/$apiVersion";
     httpClient.addRequestModifier((Request request){
       request.headers['accept'] = "application/json";
       return request;
     });
 
-    // capture http error explicitly
-    httpClient.errorSafety = false;
   }
 
   Future<Response> search({query: "superman", page: 1}){
@@ -33,14 +31,14 @@ class MoviedbProvider extends GetConnect {
       "api_key" : apiKey,
       "query" : query,
       "page" : page.toString()
-    });
+    }).timeout(Duration(seconds: 30));
   }
 
   Future<Response> trending({type: "movie", scope: "week", page: 1}){
     return get("/trending/$type/$scope", query: {
       "api_key" : apiKey,
       "page" : page.toString()
-    });
+    }).timeout(Duration(seconds: 30));
   }
 
 }
