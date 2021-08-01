@@ -11,6 +11,7 @@ import 'package:xfers_movie_assignment/delegate/movie_search_delegate.dart';
 import 'package:xfers_movie_assignment/models/error.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 import 'package:xfers_movie_assignment/models/movie_paginator.dart';
+import 'package:xfers_movie_assignment/views/movie_detail_page.dart';
 
 class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
@@ -59,7 +60,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
 
   Future<void> forceRefreshMovies() async {
     if(controller.viewMode() == ViewMode.Trending){
-        await controller.loadTrendingMovies(page: 1 , clearPreviousResult: true);
+      await controller.loadTrendingMovies(page: 1 , clearPreviousResult: true);
     } else {
       await controller.searchMovie(
           keyword: controller.searchKeyword(), page: 1 , clearPreviousResult: true
@@ -110,7 +111,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                       icon: Icon(error.icon, size: 48, color: Colors.amber,),
                       message: error.message,
                       onRetry: ()  {
-                         this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
+                        this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
                       },
                     ),
                   );
@@ -122,9 +123,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   itemCount =  controller.movieResults.length;
                 }
                 return Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
                           controller: _scrollController,
                           padding: kDefaultPadding,
                           itemBuilder: buildMoviesList,
@@ -132,10 +133,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                             return Divider();
                           },
                           itemCount: itemCount
-                        ),
                       ),
+                    ),
 
-                ],
+                  ],
                 );
               }),
             )
@@ -183,13 +184,18 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     } else {
       movie = controller.movieResults.elementAt(index);
     }
-    return MovieCard(movie: movie,);
+    return MovieCard(
+      movie: movie,
+      onTap: (){
+        Get.to(() => MovieDetailPage(movie: movie));
+      },
+    );
   }
 
   void clearSearchResults() async {
-      await this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
-      controller.setViewMode(ViewMode.Trending);
-      controller.resetSearchResults();
+    await this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
+    controller.setViewMode(ViewMode.Trending);
+    controller.resetSearchResults();
   }
 
   void handleSearch() async {
