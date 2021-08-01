@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:xfers_movie_assignment/components/readable_field.dart';
 import 'package:xfers_movie_assignment/components/tag_chip.dart';
+import 'package:xfers_movie_assignment/constants/language_local.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 import 'package:xfers_movie_assignment/constants/text_styles.dart';
 class MovieDetailPage extends StatefulWidget {
@@ -36,23 +38,26 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               children: [
                 Builder(
                   builder: (BuildContext context){
-                    if(movie.getPosterImageUrl(size: "w185") != null){
-                      return Image.network(
-                        movie.getPosterImageUrl(size: "w185")!,
-                        loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
-                          if(event == null) return widget;
-                          return Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            color: Colors.grey,
-                          );
-                        },
-                        errorBuilder: (BuildContext context, error, stackTrace){
-                          return Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            width: 125,
-                            color: Colors.grey,
-                          );
-                        },
+                    if(movie.getPosterImageUrl(size: "w92") != null){
+                      return Hero(
+                        tag: "${movie.originalTitle}-poster",
+                        child: Image.network(
+                          movie.getPosterImageUrl(size: "w92")!,
+                          loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
+                            if(event == null) return widget;
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              color: Colors.grey,
+                            );
+                          },
+                          errorBuilder: (BuildContext context, error, stackTrace){
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              width: 125,
+                              color: Colors.grey,
+                            );
+                          },
+                        ),
                       );
                     }
                     return Container(
@@ -106,8 +111,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.star, color: Colors.amber, size: 32, ),
+                            Icon(Icons.star, color: Colors.amber, size: 24, ),
                             Text(movie.voteAverage.toString(),
                                 style: kRatingTextStyle)
                           ],
@@ -118,8 +124,27 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 )
               ],
             ),
+          ),
+          ReadableField(
+            label: "overview",
+            value: movie.overview,
+          ),
+          ReadableField(
+            label: "vote count",
+            value: movie.voteCount.toString(),
+          ),
+          ReadableField(
+            label: "vote average",
+            value: movie.voteAverage.toString(),
+          ),
+          ReadableField(
+            label: "popularity",
+            value: movie.popularity.toString(),
+          ),
+          ReadableField(
+            label: "Language",
+            value: LanguageLocal().getDisplayLanguage(movie.originalLanguage) ?? movie.originalLanguage
           )
-
 
         ],
       ),

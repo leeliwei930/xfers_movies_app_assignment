@@ -187,7 +187,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     return MovieCard(
       movie: movie,
       onTap: (){
-        Get.to(() => MovieDetailPage(movie: movie));
+        Get.to(() => MovieDetailPage(movie: movie), transition: Transition.rightToLeftWithFade);
       },
     );
   }

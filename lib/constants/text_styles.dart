@@ -21,3 +21,8 @@ const kRatingTextStyle = TextStyle(
 const kTextButtonTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
+
+const kReadableFieldLabelTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w700
+);
