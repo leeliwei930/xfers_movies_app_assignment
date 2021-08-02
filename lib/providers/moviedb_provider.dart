@@ -16,14 +16,14 @@ class MoviedbProvider extends GetConnect {
     }
   }
   @override
-  void onInit() {
+  MoviedbProvider onInit() {
     // set the movied db basede url
     httpClient.baseUrl = "$endpoint/$apiVersion";
     httpClient.addRequestModifier((Request request){
       request.headers['accept'] = "application/json";
       return request;
     });
-
+    return this;
   }
 
   Future<Response> search({query: "superman", page: 1}){

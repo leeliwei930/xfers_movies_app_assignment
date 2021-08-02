@@ -40,13 +40,17 @@ class MovieController extends GetxController {
   Rx<Error?> trendingMoviesError = null.obs;
 
   @override
-  MovieController onInit()  {
+  MovieController onInit({MoviedbProvider? provider})  {
     // TODO: implement onInit
     super.onInit();
-    this.provider = MoviedbProvider(
-      apiKey: dotenv.env['MOVIE_DB_API_KEY']
-    )..onInit();
-     this.loadTrendingMovies(forceRefresh: true);
+    if(provider != null){
+      this.provider = provider..onInit();
+    } else {
+      this.provider = MoviedbProvider(
+          apiKey: dotenv.env['MOVIE_DB_API_KEY']
+      )..onInit();
+    }
+
     return this;
   }
 
@@ -92,11 +96,12 @@ class MovieController extends GetxController {
             this.trendingMoviesPaginator = paginator.obs;
 
           } else {
-            print(response.statusText!);
+
             this.trendingMoviesError = Error.mapErrorMessageToLabel(response.statusText!).obs;
           }
 
-        } catch(exception){
+        } catch(exception, stackTrace){
+          print( exception);
           if(exception is TimeoutException){
             this.trendingMoviesError = Error.mapErrorMessageToLabel("TimeoutException").obs;
           }

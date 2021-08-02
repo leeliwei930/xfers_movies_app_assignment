@@ -28,10 +28,15 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     // TODO: implement initState
     super.initState();
     this.controller = Get.put(MovieController()..onInit());
+
     this._scrollController = ScrollController();
 
     this._scrollController.addListener(listenListScrollEvent);
     this._paginationBarAnimationController = AnimationController(vsync: this,duration: Duration(milliseconds: 850));
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
+    });
+
   }
 
   // listen to the list scrolling event to determine when to load the next pages
