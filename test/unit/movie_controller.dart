@@ -8,18 +8,19 @@ import 'movie_controller.mocks.dart';
 
 @GenerateMocks([MoviedbProvider])
 void main() {
-  MockMoviedbProvider mockedProvider = MockMoviedbProvider();
 
-  when(mockedProvider.trending(page: 1)).thenAnswer((_) async {
-    return buildMockResponse();
-  });
-  when(mockedProvider.search(query: "Jobs" , page: 1)).thenAnswer((_) async {
-    return buildMockResponse(filter: "Jobs");
-  });
-  when(mockedProvider.onInit()).thenAnswer((_)  {
-    return mockedProvider;
-  });
   group("movie controller tests", (){
+    MockMoviedbProvider mockedProvider = MockMoviedbProvider();
+
+    when(mockedProvider.trending(page: 1)).thenAnswer((_) async {
+      return buildMockResponse();
+    });
+    when(mockedProvider.search(query: "Jobs" , page: 1)).thenAnswer((_) async {
+      return buildMockResponse(filter: "Jobs");
+    });
+    when(mockedProvider.onInit()).thenAnswer((_)  {
+      return mockedProvider;
+    });
     test("able to load trending movies", () async {
 
       MovieController controller = MovieController()..onInit(provider: mockedProvider);
