@@ -97,7 +97,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   return Center(
                     child: CardMessage(
                       icon: Icon(error.icon, size: 48, color: Colors.amber,),
-                      message: error.message,
+                      message: error.message.tr,
                       onRetry: () async {
                         await this.controller.searchMovie(keyword: controller.searchKeyword(), forceRefresh: true, clearPreviousResult: true);
                       },
@@ -109,7 +109,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   return Center(
                     child: CardMessage(
                       icon: Icon(error.icon, size: 48, color: Colors.amber,),
-                      message: error.message,
+                      message: error.message.tr,
                       onRetry: ()  {
                         this.controller.loadTrendingMovies(forceRefresh: true, clearPreviousResult: true);
                       },

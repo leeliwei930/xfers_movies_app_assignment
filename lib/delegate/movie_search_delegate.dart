@@ -14,22 +14,14 @@ class MovieSearchDelegate<T> extends SearchDelegate {
 
 
 
-  // @override
-  // void showResults(BuildContext context) async {
-  //   if(query.length > 0){
-  //     await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
-  //   }
-  //   super.showResults(context);
-  // }
-
   @override
-  // TODO: implement searchFieldLabel
+
   String? get searchFieldLabel => "search_movies".tr;
 
   @override
   Widget buildSuggestions(BuildContext context) {
     late List<Movie> suggestedMovies = <Movie>[];
-
+    // don't perform search on empty string
     if(this.query.length <= 0){
       if(_controller.trendingMovies.length >= 5){
         suggestedMovies = _controller.trendingMovies.sublist(0, 5);
@@ -39,15 +31,17 @@ class MovieSearchDelegate<T> extends SearchDelegate {
     }
     return Obx((){
       suggestedMovies = _controller.movieResults();
+      // showing loading indicator while perform searching
       if(_controller.searchSuggestionLoading()){
         return LinearProgressIndicator();
       }
+      // if any error occurred, show the card error message
       if(_controller.searchError() != null){
         Error error = _controller.searchError()!;
         return Center(
           child: CardMessage(
             icon: Icon(error.icon, size: 48, color: Colors.amber,),
-            message: error.message,
+            message: error.message.tr,
           ),
         );
       }
@@ -75,10 +69,10 @@ class MovieSearchDelegate<T> extends SearchDelegate {
     return <Widget>[
       IconButton(
           onPressed: (){
+            // reset the query
             this.query = "";
           },
           icon: Icon(Icons.clear)
-
       )
     ];
   }
@@ -96,15 +90,17 @@ class MovieSearchDelegate<T> extends SearchDelegate {
 
     return Obx((){
       List<Movie> results = _controller.movieResults();
+      // show loading indicator while performing searching
       if(_controller.searchSuggestionLoading()){
         return LinearProgressIndicator();
       }
+      // show card error message when error occurred
       if(_controller.searchError() != null){
         Error error = _controller.searchError()!;
         return Center(
           child: CardMessage(
             icon: Icon(error.icon, size: 48, color: Colors.amber,),
-            message: error.message,
+            message: error.message.tr,
           ),
         );
       }
@@ -112,10 +108,10 @@ class MovieSearchDelegate<T> extends SearchDelegate {
         itemBuilder: (BuildContext context, int index){
           Movie movie = results.elementAt(index);
           return ListTile(
-
               onTap: () async {
                 this.query = movie.originalTitle;
                 await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
+                // close the search with return the query back to parent with future value
                 close(context, this.query);
               },
               leading: Column(
@@ -136,11 +132,8 @@ class MovieSearchDelegate<T> extends SearchDelegate {
       );
     });
   }
-  @override
-  set query(String value)  {
-    // TODO: implement query
-    super.query = value;
-  }
+
+
   void closeSearch(BuildContext context, String query){
     close(context, query);
   }

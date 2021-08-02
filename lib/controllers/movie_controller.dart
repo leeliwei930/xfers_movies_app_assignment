@@ -38,6 +38,7 @@ class MovieController extends GetxController {
   // error state
   Rx<Error?> searchError = null.obs;
   Rx<Error?> trendingMoviesError = null.obs;
+
   @override
   MovieController onInit()  {
     // TODO: implement onInit
@@ -48,6 +49,8 @@ class MovieController extends GetxController {
      this.loadTrendingMovies(forceRefresh: true);
     return this;
   }
+
+  // return paginator object based on current view modes
   Rx<MoviePaginator?> get currentPaginator {
     if(viewMode.value == ViewMode.Trending){
       return trendingMoviesPaginator;
@@ -59,21 +62,23 @@ class MovieController extends GetxController {
     this.viewMode.value = viewMode;
   }
 
+  // clear the search query and it's results
   void resetSearchResults(){
     this.searchKeyword.value = "";
     this.movieResults.clear();
   }
+
   Future<void> loadTrendingMovies({page: 1, forceRefresh: false, clearPreviousResult: false}) async {
       this.searchKeyword.value = "";
       if(forceRefresh){
         this.isLoading.trigger(true);
       }
       // if load the second page onward, trigger section based loading indicator
-      if(page > 1){
+      if(page > 1 ){
         this.pageLoading.trigger(true);
       }
-
-        this.trendingMoviesError = null.obs;
+      // reset trendingMovies errors
+      this.trendingMoviesError = null.obs;
         try {
 
           Response response = await provider.trending(page: page);
@@ -98,13 +103,7 @@ class MovieController extends GetxController {
         } finally {
           this.isLoading.trigger(false);
           this.pageLoading.trigger(false);
-
         }
-
-
-
-
-
   }
 
   Future<void> searchMovie({keyword: String, page: 1 , forceRefresh: false, clearPreviousResult: false}) async {

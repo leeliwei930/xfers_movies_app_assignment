@@ -13,5 +13,10 @@ const Map<String, String> en_US = {
   "loading_page" : "Loading page @loadPage of @totalPage",
   "show_results" : "Showing results of",
   "loaded_results" : "Loaded @loadedResults of @totalResults",
-  "reset" : "RESET"
+  "reset" : "RESET",
+
+  "network_error" : "Unable connect to server due to a network error",
+  "network_timeout" : "Unable to load the data due to a network timeout error",
+  "unauthorized_access" : "Unauthorized Access",
+  "server_error" : "Services is not available right now. Please try again later."
 };
