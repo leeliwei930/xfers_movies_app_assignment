@@ -26,3 +26,8 @@ const kReadableFieldLabelTextStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w700
 );
+
+const kReadableFieldNumericValueTextStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w700
+);

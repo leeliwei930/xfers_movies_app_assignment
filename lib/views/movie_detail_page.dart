@@ -34,15 +34,15 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         children: [
           IntrinsicHeight(
             child:  Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Builder(
                   builder: (BuildContext context){
-                    if(movie.getPosterImageUrl(size: "w92") != null){
+                    if(movie.getPosterImageUrl(size: "w185") != null){
                       return Hero(
                         tag: "${movie.originalTitle}-poster",
                         child: Image.network(
-                          movie.getPosterImageUrl(size: "w92")!,
+                          movie.getPosterImageUrl(size: "w185")!,
                           loadingBuilder: (BuildContext context, Widget widget, ImageChunkEvent? event){
                             if(event == null) return widget;
                             return Container(
@@ -71,56 +71,53 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     );
                   },
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                movie.originalTitle,
-                                style: kCardTitleTextStyle,
-                                maxLines: 1,
-                                softWrap: false,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ),
-                            SizedBox(width: 15,),
-                            if(movie.adult)
-                              TagChip(
-                                child:Text("M",
-                                  style: kCardSubtitleTextStyle.copyWith(color: Colors.white),),
-                                backgroundColor: Theme.of(context).colorScheme.error,
-                                outlineColor: Theme.of(context).colorScheme.error,
-
-                              ),
-                          ],
-                        ),
-                        SizedBox(height: 5,),
-                        TagChip(
-                            child:Text(movie.formatReleaseDate(),
-                              style: kCardSubtitleTextStyle.copyWith(color: Theme.of(context).primaryColor),),
-                            outlineColor: Theme.of(context).primaryColor
-                        ),
-                        SizedBox(height: 15,),
-
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.star, color: Colors.amber, size: 24, ),
-                            Text(movie.voteAverage.toString(),
-                                style: kRatingTextStyle)
-                          ],
-                        )
-                      ],
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        movie.originalTitle,
+                        style: kCardTitleTextStyle,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 15,),
+                    if(movie.adult)
+                      TagChip(
+                        child:Text("M",
+                          style: kCardSubtitleTextStyle.copyWith(color: Colors.white),),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                        outlineColor: Theme.of(context).colorScheme.error,
+
+                      ),
+                  ],
+                ),
+                SizedBox(height: 5,),
+                TagChip(
+                    child:Text(movie.formatReleaseDate(),
+                      style: kCardSubtitleTextStyle.copyWith(color: Theme.of(context).primaryColor),),
+                    outlineColor: Theme.of(context).primaryColor
+                ),
+                SizedBox(height: 15,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 24, ),
+                    Text(movie.formatVoteAverage(),
+                        style: kRatingTextStyle)
+                  ],
                 )
               ],
             ),
@@ -131,19 +128,26 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           ),
           ReadableField(
             label: "vote count",
-            value: movie.voteCount.toString(),
+            value: movie.formatVoteCount(),
+            valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
           ),
           ReadableField(
             label: "vote average",
-            value: movie.voteAverage.toString(),
+            value: movie.formatVoteAverage(),
+            valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
+
           ),
           ReadableField(
             label: "popularity",
-            value: movie.popularity.toString(),
+            value: movie.formatPopularity(),
+            valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
+
           ),
           ReadableField(
             label: "Language",
-            value: LanguageLocal().getDisplayLanguage(movie.originalLanguage) ?? movie.originalLanguage
+            value: LanguageLocal().getDisplayLanguage(movie.originalLanguage) ?? movie.originalLanguage,
+            valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
+
           )
 
         ],

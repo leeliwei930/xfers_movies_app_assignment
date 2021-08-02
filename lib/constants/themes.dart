@@ -2,5 +2,6 @@
 import 'package:flutter/material.dart';
 
 ThemeData kDefaultTheme = ThemeData(
-  primaryColor: Colors.indigoAccent,
+  primaryColor: Colors.indigo,
+  accentColor: Colors.indigoAccent
 );

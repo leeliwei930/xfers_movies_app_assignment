@@ -79,6 +79,16 @@ class Movie {
     return DateFormat("d MMMM y").format(this.releaseDate!).toString();
   }
 
+  String formatPopularity(){
+    return NumberFormat.decimalPattern().format(this.popularity);
+  }
+  String formatVoteCount(){
+    return NumberFormat.decimalPattern().format(this.voteCount);
+  }
+
+  String formatVoteAverage(){
+    return NumberFormat.decimalPattern().format(this.voteAverage);
+  }
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
   Map<String, dynamic> toJson() => _$MovieToJson(this);
