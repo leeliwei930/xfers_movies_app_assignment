@@ -110,7 +110,6 @@ class MovieSearchDelegate<T> extends SearchDelegate {
           return ListTile(
               onTap: () async {
                 this.query = movie.originalTitle;
-                await this._controller.searchMovie(keyword: query, clearPreviousResult: true);
                 // close the search with return the query back to parent with future value
                 close(context, this.query);
               },
