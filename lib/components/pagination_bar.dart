@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 class PaginationBar extends StatelessWidget {
   final int loadingPage;
   final int totalPages;
@@ -32,7 +32,10 @@ class PaginationBar extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 15,),
-              Text("Loading page $loadingPage of $totalPages"),
+              Text("loading_page".trParams({
+                "loadPage" : "$loadingPage",
+                "totalPage" : "$totalPages"
+              }) ?? "Loading page $loadingPage of $totalPages"),
               Spacer(),
             ],
           ),

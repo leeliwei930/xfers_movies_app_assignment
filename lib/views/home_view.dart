@@ -77,7 +77,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Text("Movie App"),
+          title: Text("app_title".tr),
           actions: [
             IconButton(onPressed: () => handleSearch(), icon: Icon(Icons.search))
           ],

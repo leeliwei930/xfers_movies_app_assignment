@@ -24,7 +24,7 @@ class MovieSearchDelegate<T> extends SearchDelegate {
 
   @override
   // TODO: implement searchFieldLabel
-  String? get searchFieldLabel => "Search Movies";
+  String? get searchFieldLabel => "search_movies".tr;
 
   @override
   Widget buildSuggestions(BuildContext context) {

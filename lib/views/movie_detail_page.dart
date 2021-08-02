@@ -5,6 +5,7 @@ import 'package:xfers_movie_assignment/components/tag_chip.dart';
 import 'package:xfers_movie_assignment/constants/language_local.dart';
 import 'package:xfers_movie_assignment/models/movie.dart';
 import 'package:xfers_movie_assignment/constants/text_styles.dart';
+import 'package:get/get.dart';
 class MovieDetailPage extends StatefulWidget {
   final Movie movie;
   _MovieDetailPageState createState() => _MovieDetailPageState();
@@ -27,7 +28,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text("Movie Detail"),
+        title: Text("movie_detail".tr),
       ),
       body: ListView(
         padding: EdgeInsets.all(15),
@@ -123,28 +124,28 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
           ),
           ReadableField(
-            label: "overview",
+            label: "overview".tr,
             value: movie.overview,
           ),
           ReadableField(
-            label: "vote count",
+            label: "vote_count".tr,
             value: movie.formatVoteCount(),
             valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
           ),
           ReadableField(
-            label: "vote average",
+            label: "vote_average".tr,
             value: movie.formatVoteAverage(),
             valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
 
           ),
           ReadableField(
-            label: "popularity",
+            label: "popularity".tr,
             value: movie.formatPopularity(),
             valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
 
           ),
           ReadableField(
-            label: "Language",
+            label: "language".tr,
             value: LanguageLocal().getDisplayLanguage(movie.originalLanguage) ?? movie.originalLanguage,
             valueTextStyle: kReadableFieldNumericValueTextStyle.copyWith(color: Theme.of(context).accentColor),
 

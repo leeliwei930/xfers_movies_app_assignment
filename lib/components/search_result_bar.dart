@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:xfers_movie_assignment/constants/text_styles.dart';
-
+import 'package:get/get.dart';
 class SearchResultBar extends StatelessWidget {
   final int totalResults;
   final int loadedResults;
@@ -21,9 +21,9 @@ class SearchResultBar extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           elevation: 15,
           child: Container(
-            padding: EdgeInsets.all(15),
-            child: Row(
-              children: [
+              padding: EdgeInsets.all(15),
+              child: Row(
+                children: [
                   Builder(
                     builder: (BuildContext context){
                       if(isLoading){
@@ -44,25 +44,28 @@ class SearchResultBar extends StatelessWidget {
 
                   Expanded(child: Wrap(
                     children: [
-                      Text("Showing results of"),
+                      Text("show_results".tr ),
                       Text("\"$keyword\"", overflow: TextOverflow.ellipsis,),
-                      Text("Loaded $loadedResults of $totalResults"),
+                      Text("loaded_results".trParams({
+                        "loadedResults" : "$loadedResults",
+                        "totalResults" :  "$totalResults"
+                      }) ?? "Loaded $loadedResults of $totalResults"),
 
                     ],
                   )),
                   TextButton(
                       style: TextButton.styleFrom(
-                        shape: StadiumBorder(),
-                        backgroundColor: Colors.black12
+                          shape: StadiumBorder(),
+                          backgroundColor: Colors.black12
                       ),
                       onPressed: () => this.onClear != null ? this.onClear!() :  null,
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text("RESET", style: kTextButtonTextStyle,),
+                        child: Text("reset".tr, style: kTextButtonTextStyle,),
                       )
                   )
-              ],
-            )
+                ],
+              )
           )
       ),
     );
