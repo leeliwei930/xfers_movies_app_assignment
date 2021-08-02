@@ -27,7 +27,7 @@ class SearchResultBar extends StatelessWidget {
                   Builder(
                     builder: (BuildContext context){
                       if(isLoading){
-                        return SizedBox(
+                        return  SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(
@@ -42,17 +42,21 @@ class SearchResultBar extends StatelessWidget {
                     },
                   ),
 
-                  Expanded(child: Wrap(
-                    children: [
-                      Text("show_results".tr ),
-                      Text("\"$keyword\"", overflow: TextOverflow.ellipsis,),
-                      Text("loaded_results".trParams({
-                        "loadedResults" : "$loadedResults",
-                        "totalResults" :  "$totalResults"
-                      }) ?? "Loaded $loadedResults of $totalResults"),
-
-                    ],
-                  )),
+                  Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Wrap(
+                          children: [
+                            Text("show_results".tr ),
+                            Text(" \"$keyword\"", overflow: TextOverflow.ellipsis,),
+                            Text("loaded_results".trParams({
+                              "loadedResults" : "$loadedResults",
+                              "totalResults" :  "$totalResults"
+                            }) ?? "Loaded $loadedResults of $totalResults"),
+                          ],
+                        ),
+                      )
+                  ),
                   TextButton(
                       style: TextButton.styleFrom(
                           shape: StadiumBorder(),
